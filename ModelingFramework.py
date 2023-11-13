@@ -7,11 +7,13 @@ class ComplexSysModelingFramework:
     def __init__(self, var1, **kwargs):
         self.var1 = var1
         self.__dict__.update(kwargs)
-
+        self.plot_title = "Results"
         result = [[var1]]
         for key, val in kwargs.items():
             if(key.count("var")):
                 result[0].append(val)
+            if(key.count("title")):
+                self.plot_title = val
         self.results = result
 
     def run(self, func):
@@ -31,18 +33,25 @@ class ComplexSysModelingFramework:
             if(key.count("var")):
                 result.append(val)
         self.results.append(result)
-
-    def visualize_results(self, plot_type = "STANDARD"):
-        plt.title("Predator Prey Model")
+    
+    def visualize_results(self, plot_type = "STANDARD", sweeps = 1):
+        plt.title(self.plot_title)
         if(plot_type == "PHASE_SPACE"):
             var_results = []
             for i in range(len(self.results[-1])):
+                var_result = []
                 var_result = [result[i] for result in self.results]
                 var_results.append(var_result)
             if(len(var_results) == 2):
-                plt.plot(var_results[0], var_results[1])
+                N = int((len(var_results[1])-1)/sweeps)
+                for i in range(0, N):
+                    sublist_var1 = var_results[0][:N]
+                    sublist_var2 = var_results[1][:N]                       
+                    plt.plot(sublist_var1, sublist_var2)
+                    var_results[0] = var_results[0][N:]
+                    var_results[1] = var_results[1][N:] 
         else:
-           plt.plot(self.results) 
+            plt.plot(self.results)
         plt.show()
 
     def sum_variables(self):
@@ -58,6 +67,13 @@ class ComplexSysModelingFramework:
             if(key.count("var")):
                 vars.append([key,val])
         return(vars)
+    
+    def reinit_variables(self, var_dict):
+        for key in self.__dict__:
+            if key in var_dict:
+                self.__dict__[key] = var_dict[key]
+        self.update_results()
+
         
 class ExtendedComplexSysModelingFramework(ComplexSysModelingFramework):
     def __init__(self, var1, **kwargs):

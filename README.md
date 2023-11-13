@@ -4,7 +4,7 @@ This project was created as a framework for the modeling and analysis of complex
 
 ## Example Functions ##
 
-The system dynamics are taken from ["Introduction to the Modeling and Analysis of Complex Systems"](https://open.umn.edu/opentextbooks/textbooks/233)
+Equations are taken from ["Introduction to the Modeling and Analysis of Complex Systems"](https://open.umn.edu/opentextbooks/textbooks/233)
 by [Hiroki Sayaman](https://bingdev.binghamton.edu/sayama/).
        
 ## Getting Started ##
@@ -13,4 +13,10 @@ by [Hiroki Sayaman](https://bingdev.binghamton.edu/sayama/).
     - Choose the function you want to run and provide it to the run() function as a parameter
     - Run the program and observe the results
 
-![alt text](https://github.com/DRodriq/ComplexSystemsModeling/blob/main/results/predator_prey_phase_space.png)
+## Development Roadmap ##
+* Implement initial value sweeping (In Progress)
+* Implement methods for finding and visualizing equilibrium points
+* Add benchmarking and logging hooks
+* Extend unit test coverage
+
+![alt text](https://github.com/DRodriq/ComplexSystemsModeling/blob/main/results/sweep_initial_values_example.png)

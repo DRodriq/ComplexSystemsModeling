@@ -25,11 +25,23 @@ def test_function2(state_variables):
     return new_values
 
 def run_model():
-    model = ModelingFramework.ComplexSysModelingFramework(var1=1,var2=1)
-    steps = 50
-    for i in range(steps):
-        model.run(test_function2)
-    #model.visualize_results("PHASE_SPACE")
-    model.visualize_results()
+    model = ModelingFramework.ComplexSysModelingFramework(plot_title = "Sweep Initial Values Example", var1=1,var2=1)
+    steps = 30
+
+    sweep = []
+    for x in range(-20,21,5):
+        for y in range(-20,21,5):
+            var_dict = {}
+            var_dict.update({"var1": x/10})
+            var_dict.update({"var2": y/10})
+            sweep.append(var_dict)
+
+    for i in range(len(sweep)):
+        for j in range(steps):
+            model.run(test_function2)
+        model.reinit_variables(sweep[i])
+        
+
+    model.visualize_results("PHASE_SPACE", len(sweep))
 
 run_model()
