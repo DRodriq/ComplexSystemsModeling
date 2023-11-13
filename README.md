@@ -12,3 +12,5 @@ by [Hiroki Sayaman](https://bingdev.binghamton.edu/sayama/).
 * Open an example file. Each example has two different functions that can be modeled
     - Choose the function you want to run and provide it to the run() function as a parameter
     - Run the program and observe the results
+
+![alt text](https://github.com/DRodriq/ComplexSystemsModeling/blob/main/results/predator_prey_phase_space.png)
