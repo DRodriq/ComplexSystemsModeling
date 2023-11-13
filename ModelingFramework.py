@@ -33,7 +33,7 @@ class ComplexSysModelingFramework:
         self.results.append(result)
 
     def visualize_results(self, plot_type = "STANDARD"):
-        plt.title("Results")
+        plt.title("Predator Prey Model")
         if(plot_type == "PHASE_SPACE"):
             var_results = []
             for i in range(len(self.results[-1])):

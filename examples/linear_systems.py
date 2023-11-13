@@ -29,7 +29,7 @@ def run_model():
     steps = 50
     for i in range(steps):
         model.run(test_function2)
-    model.visualize_results("PHASE_SPACE")
-    #model.visualize_results()
+    #model.visualize_results("PHASE_SPACE")
+    model.visualize_results()
 
 run_model()

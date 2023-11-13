@@ -37,7 +37,7 @@ def run_model():
         model.run(predator_prey_dynamics) # remove var2 in constructor above
        # model.run(predator_prey_dynamics)
     model.visualize_results("PHASE_SPACE")
-    #model.visualize_results()
+    model.visualize_results()
 
 run_model()
 

@@ -5,7 +5,7 @@ This project was created as a framework for the modeling and analysis of complex
 ## Example Functions ##
 
 The system dynamics are taken from ["Introduction to the Modeling and Analysis of Complex Systems"](https://open.umn.edu/opentextbooks/textbooks/233)
-by [Razvan V. Florian](https://bingdev.binghamton.edu/sayama/).
+by [Hiroki Sayaman](https://bingdev.binghamton.edu/sayama/).
        
 ## Getting Started ##
 * Checkout the Repo
