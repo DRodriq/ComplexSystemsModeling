@@ -1,5 +1,7 @@
 from pylab import *
+import numpy as np
 
+'''
 def initialize(x0,y0):
     global x,y,xres,yres
     x = x0
@@ -29,4 +31,33 @@ for x0 in arange(-2,2,.5):
         print("\n***********************\n", xres)
         print("\n***********************\n", yres)
         plot(xres,yres)
-show()
+'''
+
+t_image = np.array([[[ 0.67826139,  0.29380381],
+                     [ 0.90714982,  0.52835647],
+                     [ 0.4215251 ,  0.45017551]],
+
+                   [[ 0.92814219,  0.96677647],
+                    [ 0.85304703,  0.52351845],
+                    [ 0.19981397,  0.27417313]],
+
+                   [[ 0.60659855,  0.00533165],
+                    [ 0.10820313,  0.49978937],
+                    [ 0.34144279,  0.94630077]]])
+
+def image2vector(image):
+    dim = image.shape[0]*image.shape[1]*image.shape[2]
+    print(dim)
+    v = np.reshape(image,(dim,1))
+    #v = np.reshape(-1,1)
+    return v
+
+print ("image2vector(image) = " + str(image2vector(t_image)))
+
+print(np.zeros((3,1)))
+
+
+x = np.random.rand(4,3)
+y = np.sum(x,axis=1, keepdims=True)
+
+print(y.shape)

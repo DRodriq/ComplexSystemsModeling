@@ -1,80 +1,69 @@
 import matplotlib.pyplot as plt
 import unittest
 import math
+import numpy as np
 
 
 class ComplexSysModelingFramework:
-    def __init__(self, var1, **kwargs):
-        self.var1 = var1
-        self.__dict__.update(kwargs)
-        self.plot_title = "Results"
-        result = [[var1]]
+    def __init__(self, **kwargs):
+        self.sweeps = 1
+        self.var_names = []
+        initial_values = []
         for key, val in kwargs.items():
             if(key.count("var")):
-                result[0].append(val)
-            if(key.count("title")):
-                self.plot_title = val
-        self.results = result
+                self.var_names.append(key)
+                initial_values.append(val)
+            if(key == "initial_values"):
+                initial_values = val
+        self.results = np.array(initial_values)
+        self.results.shape = (1, len(self.results))
 
     def run(self, func):
-        curr_state_dict = dict()
-        state_var_list = [[key,value] for key, value in self.__dict__.items() if key.count("var") != 0]
-        for i in range(len(state_var_list)):
-            curr_state_dict[state_var_list[i][0]] = state_var_list[i][1]
-        updated_values = func(curr_state_dict)
-        for key in self.__dict__:
-            if key in updated_values:
-                self.__dict__[key] = updated_values[key]
-        self.update_results()
+        new_results = func(self.results[-1,:])
+        self.results = np.vstack([self.results, new_results])
 
-    def update_results(self):
-        result = []
-        for key, val in self.__dict__.items():
-            if(key.count("var")):
-                result.append(val)
-        self.results.append(result)
-    
-    def visualize_results(self, plot_type = "STANDARD", sweeps = 1):
-        plt.title(self.plot_title)
+    def run_pop(self, iterations, values, func):
+        self.results[0] = values[0]
+        for i in range(len(values)):
+            self.set_values(values[i])
+            for j in range(iterations):
+                self.run(func)
+
+    def set_values(self, new_values):
+        assert(new_values.shape[0] == self.results.shape[1])
+        if(np.array_equal(self.results[-1,:], new_values) != True):
+            self.results = np.vstack([self.results, new_values])
+            self.sweeps = self.sweeps + 1
+
+    def visualize_results(self, title="Title", plot_type = "STANDARD", sweeps = 1):
+        plt.title(title)
+       # plt.xlabel(xlab)
+       # plt.ylabel(ylab)
         if(plot_type == "PHASE_SPACE"):
-            var_results = []
-            for i in range(len(self.results[-1])):
-                var_result = []
-                var_result = [result[i] for result in self.results]
-                var_results.append(var_result)
-            if(len(var_results) == 2):
-                N = int((len(var_results[1])-1)/sweeps)
-                for i in range(0, N):
-                    sublist_var1 = var_results[0][:N]
-                    sublist_var2 = var_results[1][:N]                       
-                    plt.plot(sublist_var1, sublist_var2)
-                    var_results[0] = var_results[0][N:]
-                    var_results[1] = var_results[1][N:] 
+            if(len(self.results[-1]) == 2):
+                    sub_results = np.array_split(self.results, self.sweeps, axis=0)
+                    for i in range(len(sub_results)):                                     
+                        plt.plot(sub_results[i][:,0], sub_results[i][:,1])
+                    plt.xlabel(self.var_names[0])
+                    plt.ylabel(self.var_names[1])
+            if(len(self.results[-1]) == 3):
+                ax = plt.axes(projection='3d')
+                ax.plot3D(self.results[:,0], self.results[:,1], self.results[:,2])
         else:
             plt.plot(self.results)
         plt.show()
 
-    def sum_variables(self):
-        sum = 0
-        for key, val in self.__dict__.items():
-            if(key.count("var")):
-                sum = sum + val
-        return sum
-    
-    def get_variables_list(self):
-        vars = []
-        for key, val in self.__dict__.items():
-            if(key.count("var")):
-                vars.append([key,val])
-        return(vars)
-    
-    def reinit_variables(self, var_dict):
-        for key in self.__dict__:
-            if key in var_dict:
-                self.__dict__[key] = var_dict[key]
-        self.update_results()
+    def get_state_dict(self):
+        state_vars = self.results[-1,:]
+        state_dict = {}
+        for i in range(len(state_vars)):
+            state_dict.update({self.var_names[i]:state_vars[i]})
+        return state_dict
 
-        
+    def pretty_print_state(self):
+        print(self.get_state_dict())
+    
+
 class ExtendedComplexSysModelingFramework(ComplexSysModelingFramework):
     def __init__(self, var1, **kwargs):
         super().__init__(var1, **kwargs)
@@ -93,22 +82,9 @@ class ExtendedComplexSysModelingFramework(ComplexSysModelingFramework):
 class ComplexSysModelingFramework_TEST(unittest.TestCase):
     def test_var_init(self):
         print("Running Test 1: test_var_init")
-        model = ComplexSysModelingFramework(1, var2=10, var3=5, var4=4)
-        correct_result = [["var1", 1],["var2", 10],["var3", 5],["var4", 4]]
-        self.assertEqual(model.get_variables_list(), correct_result, "Incorrect Variables")
-        print("PASS!")
-    
-    def test_var_results(self):
-        print("Running Test 2: test_var_results")
-        model = ComplexSysModelingFramework(1, var2=10, var3=5, var4=4)
-        correct_result = [[1, 10, 5, 4]]
-        self.assertEqual(model.results, correct_result, "Incorrect Results")
-        print("PASS!")
-
-    def test_sum_variables(self):
-        print("Running Test 3: test_sum_variables")
-        model = ComplexSysModelingFramework(1, var2=10, var3=5, var4=4)
-        self.assertEqual(model.sum_variables(), 20, "Incorrect Sum")
+        model = ComplexSysModelingFramework(var1=1, var2=10, var3=5, var4=4)
+        correct_result = {"var1": 1,"var2":10,"var3": 5,"var4": 4}
+        self.assertEqual(model.get_state_dict(), correct_result, "Incorrect Variables")
         print("PASS!")
 
     def test_run(self):

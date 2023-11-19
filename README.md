@@ -15,6 +15,7 @@ by [Hiroki Sayaman](https://bingdev.binghamton.edu/sayama/).
 
 ## Development Roadmap ##
 * Implement initial value sweeping (In Progress)
+* Enhance visualization methods (3d, cobweb plots)
 * Implement methods for finding and visualizing equilibrium points
 * Add benchmarking and logging hooks
 * Extend unit test coverage
